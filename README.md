@@ -12,7 +12,12 @@ This tool extracts content from the PDF files of the Civil Code, Criminal Code, 
 ## Usage
 
 ```sh
-docker run -d -p 8501:8501 -e OPENAI_API_KEY=$OPENAI_API_KEY tonypai/chat-with-taiwan-laws
+# generate vector index
+python ingest.py
+
+# launch server
+export OPENAI_API_KEY=$OPENAI_API_KEY
+streamlit run main.py
 ```
 
 ## Create your own QA AI
