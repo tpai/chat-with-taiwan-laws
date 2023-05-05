@@ -9,6 +9,12 @@ This tool extracts content from the PDF files of the Civil Code, Criminal Code, 
 - OpenAI
 - Streamlit
 
+```sh
+# install components
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
 ## Usage
 
 ```sh
@@ -41,3 +47,14 @@ streamlit run chat.py
 ### QA
 
 ![qa](./qa.png)
+
+## FAQ
+
+### ``openai.error.InvalidRequestError: The model: \`gpt-4\` does not exist``
+
+- Join [GPT-4 API waitlist](https://openai.com/waitlist/gpt-4-api), or switch the model
+
+### Switch the model
+
+1. Choice a model via [Models - OpenAI API](https://platform.openai.com/docs/models/overview), for example: `gpt-3.5-turbo`
+1. Modify `main.py` and `chat.py`, replace `model_name="gpt-4"` to `model_name="gpt-3.5-turbo"`
