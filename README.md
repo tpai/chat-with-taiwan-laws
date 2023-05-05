@@ -15,9 +15,14 @@ This tool extracts content from the PDF files of the Civil Code, Criminal Code, 
 # generate vector index
 python ingest.py
 
-# launch server
+# define OpenAI api key
 export OPENAI_API_KEY=$OPENAI_API_KEY
+
+# launch QA AI
 streamlit run main.py
+
+# launch chat AI
+streamlit run chat.py
 ```
 
 ## Create your own QA AI
@@ -29,4 +34,10 @@ streamlit run main.py
 
 ## Demo
 
-![demo](./demo.png)
+### Chat
+
+![chat](./chat.png)
+
+### QA
+
+![qa](./qa.png)
