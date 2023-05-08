@@ -21,8 +21,9 @@ pip install -r requirements.txt
 # generate vector index
 python ingest.py
 
-# define OpenAI api key
+# define environment variables
 export OPENAI_API_KEY=$OPENAI_API_KEY
+export OPENAI_MODEL="gpt-4" # default value: gpt-3.5-turbo
 
 # launch QA AI
 streamlit run main.py
@@ -57,4 +58,4 @@ streamlit run chat.py
 ### Switch the model
 
 1. Choice a model via [Models - OpenAI API](https://platform.openai.com/docs/models/overview), for example: `gpt-3.5-turbo`
-1. Modify `main.py` and `chat.py`, replace `model_name="gpt-4"` to `model_name="gpt-3.5-turbo"`
+1. Define environment variable `OPENAI_MODEL`

@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 
 from langchain.chains import RetrievalQAWithSourcesChain
@@ -5,12 +6,15 @@ from langchain.chat_models import ChatOpenAI
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 
+# Environment variables
+OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-3.5-turbo")
+
 # Load embeddings and database
 embeddings = OpenAIEmbeddings()
 db = FAISS.load_local("faiss_index", embeddings)
 
 # Create a retrieval chain with the ChatOpenAI model
-chain = RetrievalQAWithSourcesChain.from_chain_type(llm=ChatOpenAI(model_name="gpt-4", temperature=0), chain_type="stuff", retriever=db.as_retriever(), max_tokens_limit=2500, reduce_k_below_max_tokens=True)
+chain = RetrievalQAWithSourcesChain.from_chain_type(llm=ChatOpenAI(model_name=OPENAI_MODEL, temperature=0), chain_type="stuff", retriever=db.as_retriever(), max_tokens_limit=3500, reduce_k_below_max_tokens=True)
 
 # Streamlit input field and text area
 st.title("台灣法規問答 AI")

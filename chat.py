@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 from streamlit_chat import message
 from langchain.chains import ConversationalRetrievalChain
@@ -6,13 +7,20 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.memory import ConversationBufferMemory
 
+# Environment variables
+OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-3.5-turbo")
+
 # Load embeddings and database
 embeddings = OpenAIEmbeddings()
 db = FAISS.load_local("faiss_index", embeddings)
 
-# Create a retrieval chain with the ChatOpenAI model
-memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-chain = ConversationalRetrievalChain.from_llm(llm=ChatOpenAI(model_name="gpt-4", temperature=0), retriever=db.as_retriever(), memory=memory)
+llm = ChatOpenAI(model_name=OPENAI_MODEL, temperature=0)
+chain = ConversationalRetrievalChain.from_llm(
+    llm=llm,
+    memory=ConversationBufferMemory(memory_key="chat_history", return_messages=True, output_key="answer"),
+    retriever=db.as_retriever(),
+    max_tokens_limit=3500,
+)
 
 st.set_page_config(
     page_title="Chat with Taiwan Laws",
@@ -33,6 +41,9 @@ if 'generated' not in st.session_state:
 if 'past' not in st.session_state:
     st.session_state['past'] = []
 
+if 'memory' not in st.session_state:
+    st.session_state['memory'] = ''
+
 def get_text():
     input_text = st.text_input("請輸入對話：","你好", key="input")
     return input_text 
@@ -41,9 +52,13 @@ question = get_text()
 
 if question:
     with st.spinner("🤖 對話生成中，請稍候..."):
-        output = chain({"question": f"{question} 請用台灣繁體中文簡單回答"}, return_only_outputs=True)
+        humanMessage = question
+        output = chain({"question": f"對話紀錄：\n{st.session_state['memory']}\n---\n{humanMessage} 請用台灣繁體中文簡單回答"})
+        aiMessage = output["answer"]
+        st.session_state['memory'] += f"你: {humanMessage}\nAI: {aiMessage}\n"
+        print(output["question"])
         st.session_state.past.append(question)
-        st.session_state.generated.append(output["answer"])
+        st.session_state.generated.append(aiMessage)
 
 if st.session_state['generated']:
     for i in range(len(st.session_state['generated'])-1, -1, -1):
