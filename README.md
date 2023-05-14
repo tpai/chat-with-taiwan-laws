@@ -43,9 +43,13 @@ streamlit run chat.py
 
 ### Chat
 
+https://chat-with-taiwan-laws.streamlit.app/
+
 ![chat](./chat.png)
 
 ### QA
+
+https://qna-with-taiwan-laws.streamlit.app/
 
 ![qa](./qa.png)
 
